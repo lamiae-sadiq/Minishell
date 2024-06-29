@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aanouari <aanouari@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lsadiq <lsadiq@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/17 16:57:47 by aanouari          #+#    #+#             */
-/*   Updated: 2023/05/15 01:46:20 by aanouari         ###   ########.fr       */
+/*   Created: 2023/05/20 00:57:06 by lsadiq            #+#    #+#             */
+/*   Updated: 2023/06/26 14:21:25 by lsadiq           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-char	*ft_strdup(char *str)
+int	ft_env(void)
 {
-	char	*dup;
 	int		i;
+	t_shell	*tmp;
 
-	dup = ft_calloc(sizeof(char), (ft_strlen(str) + 1));
-	if (!dup)
-		exit(EXIT_FAILURE);
-	i = 0;
-	while (str && str[i])
+	tmp = &g_data;
+	i = -1;
+	while (tmp->env[++i])
 	{
-		dup[i] = str[i];
-		i++;
+		if (!ft_strchr(tmp->env[i], '='))
+			continue ;
+		ft_dprintf(1, "%s\n", tmp->env[i]);
 	}
-	return (dup);
+	g_data.exit_s = 0;
+	return (g_data.exit_s);
 }

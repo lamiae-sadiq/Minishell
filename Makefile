@@ -6,11 +6,11 @@
 #    By: aanouari <aanouari@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/24 08:21:48 by aanouari          #+#    #+#              #
-#    Updated: 2023/04/28 11:35:30 by aanouari         ###   ########.fr        #
+#    Updated: 2023/06/26 22:27:27 by aanouari         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	Minishell
+NAME		=	minishell
 
 NO_COLOR	=	\033[0m
 GREEN		=	\033[0;1;92m
@@ -24,44 +24,40 @@ CC 	=		cc
 CFLAGS =	-Wall -Wextra -Werror
 RM =		rm -rf
 
-_SRCS =		minishell.c parsing_utils.c token_structure.c aesthetic.c \
-			joiners.c utils.c type_casters.c parsing.c
-SRCS =		$(addprefix parsing/, $(_SRCS))
-OBJS =		$(SRCS:.c=.o)
+PSRCS	=	lexical_analysis.c structure.c signal.c \
+			joiners.c utils.c parsing.c redir.c errors.c expand.c \
+			expand_2.c clean.c
+P_SRCS	=		$(addprefix parsing/, $(PSRCS))
+
+BSRCS	=	ft_cd.c ft_pwd.c ft_export.c ft_env.c ft_echo.c \
+			ft_unset.c ft_exit.c cd_helper.c export_helper1.c \
+			export_helper2.c
+B_SRCS	=		$(addprefix builtins/, $(BSRCS))
+
+ESRCS	=	builtins.c exec_cmd.c exec_red.c exec_helper.c \
+			here_doc.c exec_1.c  
+E_SRCS	=		$(addprefix execution/, $(ESRCS))
+
+MAIN	=	minishell.c
+
+OBJS	=	$(P_SRCS:.c=.o) $(B_SRCS:.c=.o) $(E_SRCS:.c=.o) $(MAIN:.c=.o)
 
 
-READLINE =	/goinfre/aanouari/homebrew/opt/readline/lib
+READLINE =	${HOME}/Desktop/brew/opt/readline/lib
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
-	@printf "$(RED)\r LOADING...⏳$(NO_COLOR)"
+	@printf "$(RED)\r YOUR SHELL IS LOADING...⏳$(NO_COLOR)"
+	@sleep 0.03
+	@printf "$(RED)\r YOUR SHELL IS LOADING...⌛️$(NO_COLOR)"
+	@sleep 0.03
 	
 all:		$(NAME)
-
-
-get_brew	:
-				@printf "$(ITALIC)$(GRAY)     Installing Homebrew...$(NO_COLOR)"
-				@cd ~/goinfre/ && \
-				if [ -d homebrew ]; then \
-					printf "$(GREEN)- Homebrew already installed -$(NO_COLOR)"; \
-					exit 0; \
-				fi
-				@cd ~/goinfre/ && mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
-				@cd ~/goinfre/ && eval "$$(homebrew/bin/brew shellenv)"
-				@brew update --force --quiet
-				@chmod -R go-w "$$(brew --prefix)/share/zsh"
-
-get_readline:
-				@printf "$(ITALIC)$(GRAY)     Installing readline...$(NO_COLOR)""
-				@brew install -q readline
-
-install		:	get_brew get_readline
-
 
 $(NAME):$(OBJS)
 		@make -C libft/
 		@$(CC) $(CFLAGS) -L libft/ -lft -lreadline -L $(READLINE) $(OBJS) -o $(NAME)
-		@printf "$(GREEN)\r YOUR MINISHELL IS READY!!\n$(NO_COLOR)"
+		@printf "$(GREEN)\r YOUR SHELL IS READY!!\n$(NO_COLOR)"
 		
 clean:
 				@$(RM) $(OBJS)
@@ -76,4 +72,5 @@ fclean:			clean
 
 re:				fclean all
 
-.PHONY	:		all get_brew get_readline install clean fclean re bonus
+
+.PHONY	:		all clean fclean re bonus

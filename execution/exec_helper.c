@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   exec_helper.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aanouari <aanouari@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lsadiq <lsadiq@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/06 11:33:37 by lsadiq            #+#    #+#             */
-/*   Updated: 2023/06/26 16:20:35 by aanouari         ###   ########.fr       */
+/*   Created: 2023/06/26 15:05:27 by lsadiq            #+#    #+#             */
+/*   Updated: 2023/06/26 15:09:57 by lsadiq           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-void	ft_putchar_fd(char c, int fd)
+int	ft_reverse_fd(int *end, int index)
 {
-	write(fd, &c, 1);
+	close(end[index]);
+	return (end[!index]);
+}
+
+void	ft_here_sig(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }
